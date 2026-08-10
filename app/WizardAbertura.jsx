@@ -3,21 +3,19 @@ import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
 import { passosPersonalizados } from "@/lib/guiaAbertura";
 
-export default function WizardAbertura({ onSair }) {
+export default function WizardAbertura({ onSair, perfil }) {
   const [passo, setPasso] = useState(0);
-  const [enquadramento, setEnquadramento] = useState("");
-  const [atividade, setAtividade] = useState("");
-  const [regulamentada, setRegulamentada] = useState(null);
-  const [empregados, setEmpregados] = useState(null);
+  const [enquadramento, setEnquadramento] = useState(perfil?.enquadramento === "mei" || perfil?.enquadramento === "meepp" ? perfil.enquadramento : "");
+  const [atividade, setAtividade] = useState(perfil?.atividade || "");
+  const [regulamentada, setRegulamentada] = useState(perfil?.regulamentada ?? null);
+  const [empregados, setEmpregados] = useState(perfil?.temFuncionarios ?? null);
 
   const respostas = { enquadramento, atividade, regulamentada, empregados };
   const roteiro = useMemo(() => passosPersonalizados(respostas), [enquadramento, regulamentada, empregados]);
 
-  const passos = [
-    <div key="0">
-      <p style={{ fontSize: 13, color: "#3A423F", marginBottom: 14 }}>
-        Qual é o porte esperado da empresa?
-      </p>
+  const passoEnquadramento = (
+    <div key="enq">
+      <p style={{ fontSize: 13, color: "#3A423F", marginBottom: 14 }}>Qual é o porte esperado da empresa?</p>
       <div className="ctb-opcoes">
         <label className={"ctb-opcao" + (enquadramento === "mei" ? " selecionada" : "")}>
           <input type="radio" name="enq" checked={enquadramento === "mei"} onChange={() => setEnquadramento("mei")} />
@@ -34,9 +32,11 @@ export default function WizardAbertura({ onSair }) {
           </span>
         </label>
       </div>
-    </div>,
+    </div>
+  );
 
-    <div key="1">
+  const passoDetalhes = (
+    <div key="detalhes">
       <p style={{ fontSize: 13, color: "#3A423F", marginBottom: 14 }}>Qual é a atividade principal?</p>
       <div className="ctb-opcoes">
         {[
@@ -68,9 +68,7 @@ export default function WizardAbertura({ onSair }) {
         </label>
       </div>
 
-      <p style={{ fontSize: 13, color: "#3A423F", margin: "18px 0 8px" }}>
-        Você já vai começar contratando empregados (CLT)?
-      </p>
+      <p style={{ fontSize: 13, color: "#3A423F", margin: "18px 0 8px" }}>Você já vai começar contratando empregados (CLT)?</p>
       <div className="ctb-opcoes">
         <label className={"ctb-opcao" + (empregados === true ? " selecionada" : "")}>
           <input type="radio" name="emp" checked={empregados === true} onChange={() => setEmpregados(true)} />
@@ -81,9 +79,11 @@ export default function WizardAbertura({ onSair }) {
           <span className="titulo">Não, por enquanto</span>
         </label>
       </div>
-    </div>,
+    </div>
+  );
 
-    <div key="2">
+  const passoRoteiro = (
+    <div key="roteiro">
       <div className="ctb-aviso">
         ✅ Roteiro personalizado com {roteiro.length} passos para{" "}
         {enquadramento === "mei" ? "abrir seu MEI" : "abrir sua ME/EPP"}, considerando as suas
@@ -116,10 +116,21 @@ export default function WizardAbertura({ onSair }) {
           {enquadramento === "mei" ? "Abrir o Portal do Empreendedor →" : "Abrir o Portal Redesim →"}
         </a>
       </div>
-    </div>,
-  ];
+    </div>
+  );
 
-  const podeAvancar = passo === 0 ? !!enquadramento : passo === 1 ? !!atividade && regulamentada !== null && empregados !== null : true;
+  // Se o perfil da empresa já respondeu atividade/regulamentação/empregados,
+  // pulamos essa pergunta e vamos direto do enquadramento para o roteiro.
+  const temDetalhesDoPerfil = !!perfil?.atividade && perfil?.regulamentada !== null && perfil?.regulamentada !== undefined && perfil?.temFuncionarios !== null && perfil?.temFuncionarios !== undefined;
+  const passos = temDetalhesDoPerfil ? [passoEnquadramento, passoRoteiro] : [passoEnquadramento, passoDetalhes, passoRoteiro];
+
+  const ultimoIndice = passos.length - 1;
+  const podeAvancar =
+    passo === 0
+      ? !!enquadramento
+      : !temDetalhesDoPerfil && passo === 1
+        ? !!atividade && regulamentada !== null && empregados !== null
+        : true;
 
   return (
     <WizardShell titulo="Abrir minha empresa" icone="🏁" totalPassos={passos.length} passoAtual={passo} onSair={onSair}>
@@ -127,9 +138,9 @@ export default function WizardAbertura({ onSair }) {
       <WizardNav
         mostrarVoltar={passo > 0}
         onVoltar={() => setPasso((p) => p - 1)}
-        onProximo={() => (passo === passos.length - 1 ? onSair() : setPasso((p) => p + 1))}
+        onProximo={() => (passo === ultimoIndice ? onSair() : setPasso((p) => p + 1))}
         podeAvancar={podeAvancar}
-        textoProximo={passo === passos.length - 1 ? "Concluir" : passo === passos.length - 2 ? "Gerar roteiro" : "Próximo"}
+        textoProximo={passo === ultimoIndice ? "Concluir" : passo === ultimoIndice - 1 ? "Gerar roteiro" : "Próximo"}
       />
     </WizardShell>
   );

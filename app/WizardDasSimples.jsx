@@ -1,16 +1,16 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
-import { ANEXOS, calcularDAS, fmtBRL, fmtPct, FATOR_R_MINIMO } from "@/lib/simplesNacional";
+import { ANEXOS, calcularDAS, fmtBRL, fmtPct, FATOR_R_MINIMO, anexoSugeridoPorAtividade } from "@/lib/simplesNacional";
 
 function parseNum(s) {
   const v = parseFloat(String(s || "").replace(/\./g, "").replace(",", "."));
   return Number.isFinite(v) ? v : 0;
 }
 
-export default function WizardDasSimples({ onSair }) {
+export default function WizardDasSimples({ onSair, perfil }) {
   const [passo, setPasso] = useState(0);
-  const [anexo, setAnexo] = useState("");
+  const [anexo, setAnexo] = useState(perfil ? anexoSugeridoPorAtividade(perfil.atividade) : "");
   const [rbt12, setRbt12] = useState("");
   const [receitaMes, setReceitaMes] = useState("");
   const [folha, setFolha] = useState("");

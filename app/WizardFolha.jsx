@@ -91,7 +91,7 @@ export default function WizardFolha({ onSair }) {
               Lance esta folha no eSocial dentro do prazo mensal (evento de folha de pagamento até
               o dia 15 do mês seguinte) e recolha o FGTS até o dia 20.
             </p>
-            <a className="ctb-btn-link" href="https://www.gov.br/esocial/pt-br" target="_blank" rel="noopener noreferrer">
+            <a className="ctb-btn-link" href="https://www.esocial.gov.br" target="_blank" rel="noopener noreferrer">
               Abrir o eSocial →
             </a>
           </div>

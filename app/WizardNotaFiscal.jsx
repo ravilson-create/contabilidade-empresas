@@ -6,29 +6,32 @@ const RESULTADOS = {
   servico: {
     nota: "NFS-e — Nota Fiscal de Serviço Eletrônica",
     tributo: "ISS (municipal)",
-    onde: "Sistema de emissão de NFS-e da Prefeitura do seu município",
-    url: "https://www.gov.br/pt-br/servicos/emitir-alvara-de-funcionamento",
-    texto: "Toda prestação de serviço exige NFS-e, mesmo para o MEI. O layout e o sistema variam por cidade — pesquise 'NFS-e prefeitura de [sua cidade]'.",
+    onde: "Portal Nacional da NFS-e",
+    url: "https://www.gov.br/nfse/pt-br",
+    texto:
+      "Toda prestação de serviço exige NFS-e, mesmo para o MEI. Desde 1º/01/2026 a emissão é obrigatoriamente feita pelo Emissor Nacional da NFS-e (portal único do governo federal), que substituiu os sistemas próprios de cada prefeitura.",
   },
   consumidor_final: {
     nota: "NFC-e — Nota Fiscal de Consumidor Eletrônica (ou cupom fiscal)",
     tributo: "ICMS (estadual)",
-    onde: "Sistema de emissão de NFC-e da Sefaz do seu estado",
-    url: "https://www.gov.br/pt-br/orgaos-do-governo/secretarias-estaduais-de-fazenda",
-    texto: "Usada em vendas presenciais de mercadoria a consumidor final (varejo, balcão). É a nota que normalmente sai impressa ou por QR Code no PDV.",
+    onde: "Portal Nacional da NF-e/NFC-e + emissor gratuito da Sefaz do seu estado",
+    url: "https://www.nfe.fazenda.gov.br/portal/",
+    texto:
+      "Usada em vendas presenciais de mercadoria a consumidor final (varejo, balcão) — normalmente sai impressa ou por QR Code no PDV. A emissão é feita no emissor gratuito da Sefaz do seu estado; o portal nacional reúne a documentação e os links de cada estado.",
   },
   b2b: {
     nota: "NF-e — Nota Fiscal Eletrônica (modelo 55)",
     tributo: "ICMS (estadual)",
-    onde: "Sistema de emissão de NF-e da Sefaz do seu estado",
-    url: "https://www.gov.br/pt-br/orgaos-do-governo/secretarias-estaduais-de-fazenda",
-    texto: "Obrigatória para vendas a outra empresa, revenda, indústria ou operações interestaduais — precisa acompanhar o transporte da mercadoria.",
+    onde: "Portal Nacional da NF-e/NFC-e + emissor gratuito da Sefaz do seu estado",
+    url: "https://www.nfe.fazenda.gov.br/portal/",
+    texto:
+      "Obrigatória para vendas a outra empresa, revenda, indústria ou operações interestaduais — precisa acompanhar o transporte da mercadoria. A emissão é feita no emissor gratuito da Sefaz do seu estado.",
   },
 };
 
-export default function WizardNotaFiscal({ onSair }) {
+export default function WizardNotaFiscal({ onSair, perfil }) {
   const [passo, setPasso] = useState(0);
-  const [tipoOperacao, setTipoOperacao] = useState("");
+  const [tipoOperacao, setTipoOperacao] = useState(perfil ? (perfil.atividade === "servico" ? "servico" : "mercadoria") : "");
   const [destino, setDestino] = useState("");
 
   const chaveResultado = tipoOperacao === "servico" ? "servico" : destino === "consumidor" ? "consumidor_final" : "b2b";

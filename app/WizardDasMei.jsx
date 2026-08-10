@@ -16,9 +16,9 @@ function parseNum(s) {
   return Number.isFinite(v) ? v : 0;
 }
 
-export default function WizardDasMei({ onSair }) {
+export default function WizardDasMei({ onSair, perfil }) {
   const [passo, setPasso] = useState(0);
-  const [tipo, setTipo] = useState("");
+  const [tipo, setTipo] = useState(perfil ? (perfil.atividade === "servico" ? "servico" : "comercio_industria") : "");
   const [caminhoneiro, setCaminhoneiro] = useState(false);
   const [faturamentoAno, setFaturamentoAno] = useState("");
 

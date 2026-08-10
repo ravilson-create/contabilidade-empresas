@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PerfilEmpresa from "./PerfilEmpresa";
 import CatalogoServicos from "./CatalogoServicos";
 import WizardAbertura from "./WizardAbertura";
 import WizardDasMei from "./WizardDasMei";
@@ -27,19 +28,48 @@ const COMPONENTES_SERVICO = {
   links: LinksView,
 };
 
+const CHAVE_PERFIL = "ctb_perfil_empresa";
+
 export default function AppContabilidade() {
+  const [perfil, setPerfil] = useState(null);
+  const [perfilCarregado, setPerfilCarregado] = useState(false);
+  const [editandoPerfil, setEditandoPerfil] = useState(false);
   const [servicoAtivo, setServicoAtivo] = useState(null);
+
+  useEffect(() => {
+    try {
+      const salvo = localStorage.getItem(CHAVE_PERFIL);
+      if (salvo) setPerfil(JSON.parse(salvo));
+    } catch {}
+    setPerfilCarregado(true);
+  }, []);
+
+  const salvarPerfil = (novoPerfil) => {
+    setPerfil(novoPerfil);
+    setEditandoPerfil(false);
+    try {
+      localStorage.setItem(CHAVE_PERFIL, JSON.stringify(novoPerfil));
+    } catch {}
+  };
+
   const ComponenteServico = servicoAtivo ? COMPONENTES_SERVICO[servicoAtivo] : null;
+  const mostrarPerfil = perfilCarregado && (!perfil || editandoPerfil);
 
   return (
     <>
-      <div className="ctb-topo" onClick={() => setServicoAtivo(null)}>
+      <div
+        className="ctb-topo"
+        onClick={() => {
+          setServicoAtivo(null);
+          setEditandoPerfil(false);
+        }}
+      >
         <h1>Contabilidade para Micro e Pequenas Empresas</h1>
-        <p>Escolha um serviço e o sistema calcula, preenche e indica onde concluir</p>
+        <p>Conte sobre a sua empresa e o sistema calcula, preenche e indica onde concluir cada obrigação</p>
       </div>
 
       <div className="ctb-conteudo">
-        {!servicoAtivo && (
+        {!servicoAtivo && !mostrarPerfil && (
           <div className="ctb-aviso" style={{ background: "#E0F2FE", color: "#0C4A6E" }}>
             ⚖️ Ferramenta de orientação geral, sem substituir a assessoria de um contador ou
             advogado. Valores e prazos têm como referência a legislação e as tabelas em vigor em
@@ -49,10 +79,12 @@ export default function AppContabilidade() {
           </div>
         )}
 
-        {ComponenteServico ? (
-          <ComponenteServico onSair={() => setServicoAtivo(null)} />
+        {!perfilCarregado ? null : mostrarPerfil ? (
+          <PerfilEmpresa perfilInicial={perfil} onConcluir={salvarPerfil} />
+        ) : ComponenteServico ? (
+          <ComponenteServico onSair={() => setServicoAtivo(null)} perfil={perfil} />
         ) : (
-          <CatalogoServicos onEscolher={setServicoAtivo} />
+          <CatalogoServicos perfil={perfil} onEscolher={setServicoAtivo} onEditarPerfil={() => setEditandoPerfil(true)} />
         )}
       </div>
     </>

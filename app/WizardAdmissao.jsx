@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
 import { calcularEncargosAdmissao } from "@/lib/folhaPagamento";
-import { fmtBRL } from "@/lib/simplesNacional";
+import { fmtBRL, anexoSugeridoPorAtividade } from "@/lib/simplesNacional";
 
 function parseNum(s) {
   const v = parseFloat(String(s || "").replace(/\./g, "").replace(",", "."));
@@ -20,10 +20,10 @@ const DOCUMENTOS = [
   "Exame médico admissional (ASO), obrigatório antes do início do trabalho",
 ];
 
-export default function WizardAdmissao({ onSair }) {
+export default function WizardAdmissao({ onSair, perfil }) {
   const [passo, setPasso] = useState(0);
   const [salario, setSalario] = useState("");
-  const [anexoSimples, setAnexoSimples] = useState("nao_simples");
+  const [anexoSimples, setAnexoSimples] = useState(perfil?.enquadramento === "meepp" ? anexoSugeridoPorAtividade(perfil.atividade) || "nao_simples" : "nao_simples");
 
   const encargos = useMemo(() => {
     const s = parseNum(salario);
@@ -113,7 +113,7 @@ export default function WizardAdmissao({ onSair }) {
               sistema gera automaticamente as guias de FGTS (dia 20) e a folha de pagamento
               mensal.
             </p>
-            <a className="ctb-btn-link" href="https://www.gov.br/esocial/pt-br" target="_blank" rel="noopener noreferrer">
+            <a className="ctb-btn-link" href="https://www.esocial.gov.br" target="_blank" rel="noopener noreferrer">
               Abrir o eSocial →
             </a>
           </div>

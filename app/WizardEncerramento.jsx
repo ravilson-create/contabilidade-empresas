@@ -3,9 +3,9 @@ import { useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
 import { PASSOS_ENCERRAMENTO_MEI, PASSOS_ENCERRAMENTO_MEEPP } from "@/lib/guiaEncerramento";
 
-export default function WizardEncerramento({ onSair }) {
+export default function WizardEncerramento({ onSair, perfil }) {
   const [passo, setPasso] = useState(0);
-  const [enquadramento, setEnquadramento] = useState("");
+  const [enquadramento, setEnquadramento] = useState(perfil?.enquadramento === "mei" || perfil?.enquadramento === "meepp" ? perfil.enquadramento : "");
 
   const roteiro = enquadramento === "mei" ? PASSOS_ENCERRAMENTO_MEI : PASSOS_ENCERRAMENTO_MEEPP;
 
