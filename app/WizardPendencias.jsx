@@ -86,9 +86,9 @@ export default function WizardPendencias({ onSair, perfil }) {
         <div className="titulo">Onde consultar e regularizar</div>
         <p>
           {situacao === "nao_sei"
-            ? "Comece pela Consulta Optantes (gratuita, sem login) no Portal do Simples Nacional."
+            ? "Comece pela Consulta Optantes (gratuita, sem login) no Portal do Simples Nacional — e anote o 'Detalhamento' de quem excluiu, se for o caso."
             : situacao === "excluida"
-              ? "Confira o Termo de Exclusão e o Relatório de Pendências no e-CAC, e depois volte ao Portal do Simples Nacional para regularizar e, na janela do ano, solicitar nova opção."
+              ? "Se a Consulta Optantes apontou a Receita Federal como responsável, confira o Termo de Exclusão no e-CAC. Se apontou um Estado ou Município, o e-CAC não vai mostrar nada — contate a Sefaz do estado ou a Secretaria de Fazenda da prefeitura indicada. Depois de regularizado, volte ao Portal do Simples Nacional para solicitar nova opção na janela do ano."
               : "Regularize as declarações e pagamentos diretamente no Portal do Simples Nacional."}
         </p>
         <a className="ctb-btn-link" href="https://www8.receita.fazenda.gov.br/SimplesNacional/" target="_blank" rel="noopener noreferrer">
@@ -97,7 +97,7 @@ export default function WizardPendencias({ onSair, perfil }) {
         {situacao !== "ainda_optante" && (
           <div style={{ marginTop: 8 }}>
             <a className="ctb-btn-link" href="https://cav.receita.fazenda.gov.br/" target="_blank" rel="noopener noreferrer">
-              Abrir o e-CAC →
+              Abrir o e-CAC (se a exclusão foi federal) →
             </a>
           </div>
         )}
