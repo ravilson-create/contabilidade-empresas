@@ -29,13 +29,20 @@ export default function WizardEncerramento({ onSair, perfil }) {
         ⚠️ Não deixe a empresa "esquecida" ativa: mesmo sem faturar, ela continua gerando DAS,
         declarações e multas em atraso, que viram dívida ligada ao seu CPF.
       </div>
-      {roteiro.map((p) => (
-        <div className="ctb-card" key={p.titulo}>
-          <h3>{p.titulo}</h3>
-          <p>{p.texto}</p>
-          <span className="ctb-base">{p.base}</span>
-        </div>
-      ))}
+      {roteiro.map((p, i) =>
+        i === 0 ? (
+          <div className="ctb-alerta-forte" key={p.titulo}>
+            <div className="titulo">{p.titulo}</div>
+            <p>{p.texto}</p>
+          </div>
+        ) : (
+          <div className="ctb-card" key={p.titulo}>
+            <h3>{p.titulo}</h3>
+            <p>{p.texto}</p>
+            <span className="ctb-base">{p.base}</span>
+          </div>
+        )
+      )}
       <div className="ctb-proximo-passo">
         <div className="titulo">Onde solicitar a baixa</div>
         <p>
