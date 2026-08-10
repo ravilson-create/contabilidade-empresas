@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import CalculadoraRBT12 from "./CalculadoraRBT12";
 import { ANEXOS, calcularDAS, fmtBRL, fmtPct, FATOR_R_MINIMO, anexoSugeridoPorAtividade } from "@/lib/simplesNacional";
 
 function parseNum(s) {
@@ -14,6 +15,7 @@ export default function WizardDasSimples({ onSair, perfil }) {
   const [rbt12, setRbt12] = useState("");
   const [receitaMes, setReceitaMes] = useState("");
   const [folha, setFolha] = useState("");
+  const [mostrarCalcRbt12, setMostrarCalcRbt12] = useState(false);
 
   const resultado = useMemo(() => {
     if (!anexo) return null;
@@ -44,12 +46,30 @@ export default function WizardDasSimples({ onSair, perfil }) {
         <div className="ctb-campo">
           <label>Receita bruta acumulada nos últimos 12 meses (RBT12) — R$</label>
           <input inputMode="decimal" value={rbt12} onChange={(e) => setRbt12(e.target.value)} placeholder="Ex: 240000,00" autoFocus />
+          <button
+            type="button"
+            onClick={() => setMostrarCalcRbt12((v) => !v)}
+            style={{ alignSelf: "flex-start", background: "none", border: "none", color: "#0D7A3E", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0, marginTop: 4 }}
+          >
+            {mostrarCalcRbt12 ? "Fechar calculadora de RBT12 ▲" : "Não sei meu RBT12 — calcular ▼"}
+          </button>
         </div>
         <div className="ctb-campo">
           <label>Receita bruta deste mês de apuração — R$</label>
           <input inputMode="decimal" value={receitaMes} onChange={(e) => setReceitaMes(e.target.value)} placeholder="Ex: 20000,00" />
         </div>
       </div>
+
+      {mostrarCalcRbt12 && (
+        <CalculadoraRBT12
+          onUsar={(valor) => {
+            setRbt12(String(Math.round(valor * 100) / 100).replace(".", ","));
+            setMostrarCalcRbt12(false);
+          }}
+          onFechar={() => setMostrarCalcRbt12(false)}
+        />
+      )}
+
       {anexo === "V" && (
         <div className="ctb-form-linha">
           <div className="ctb-campo">
