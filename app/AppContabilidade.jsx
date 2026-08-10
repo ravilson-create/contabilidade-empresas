@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PerfilEmpresa from "./PerfilEmpresa";
 import CatalogoServicos from "./CatalogoServicos";
 import WizardAbertura from "./WizardAbertura";
+import WizardPendencias from "./WizardPendencias";
 import WizardDasMei from "./WizardDasMei";
 import WizardDasSimples from "./WizardDasSimples";
 import WizardDasnSimei from "./WizardDasnSimei";
@@ -16,6 +17,7 @@ import LinksView from "./LinksView";
 
 const COMPONENTES_SERVICO = {
   abertura: WizardAbertura,
+  pendencias: WizardPendencias,
   "das-mei": WizardDasMei,
   "das-simples": WizardDasSimples,
   "dasn-simei": WizardDasnSimei,

@@ -8,8 +8,10 @@ export default function PerfilEmpresa({ perfilInicial, onConcluir }) {
   const [uf, setUf] = useState(perfilInicial?.uf || "");
   const [temFuncionarios, setTemFuncionarios] = useState(perfilInicial?.temFuncionarios ?? null);
   const [regulamentada, setRegulamentada] = useState(perfilInicial?.regulamentada ?? null);
+  const [declaracoesEmDia, setDeclaracoesEmDia] = useState(perfilInicial?.declaracoesEmDia || "");
 
-  const podeConcluir = !!enquadramento && !!atividade && !!uf && temFuncionarios !== null && regulamentada !== null;
+  const jaAberta = enquadramento === "mei" || enquadramento === "meepp";
+  const podeConcluir = !!enquadramento && !!atividade && !!uf && temFuncionarios !== null && regulamentada !== null && (!jaAberta || !!declaracoesEmDia);
 
   return (
     <div>
@@ -95,12 +97,34 @@ export default function PerfilEmpresa({ perfilInicial, onConcluir }) {
         </label>
       </div>
 
+      {jaAberta && (
+        <>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#1C2521", margin: "18px 0 8px" }}>
+            As declarações do Simples Nacional (DAS/PGDAS-D ou DASN-SIMEI) estão em dia?
+          </p>
+          <div className="ctb-opcoes">
+            <label className={"ctb-opcao" + (declaracoesEmDia === "sim" ? " selecionada" : "")}>
+              <input type="radio" name="dec" checked={declaracoesEmDia === "sim"} onChange={() => setDeclaracoesEmDia("sim")} />
+              <span className="titulo">Sim, em dia</span>
+            </label>
+            <label className={"ctb-opcao" + (declaracoesEmDia === "nao" ? " selecionada" : "")}>
+              <input type="radio" name="dec" checked={declaracoesEmDia === "nao"} onChange={() => setDeclaracoesEmDia("nao")} />
+              <span className="titulo">Não, há meses atrasadas</span>
+            </label>
+            <label className={"ctb-opcao" + (declaracoesEmDia === "nao_sei" ? " selecionada" : "")}>
+              <input type="radio" name="dec" checked={declaracoesEmDia === "nao_sei"} onChange={() => setDeclaracoesEmDia("nao_sei")} />
+              <span className="titulo">Não sei / faz tempo que não mexo nisso</span>
+            </label>
+          </div>
+        </>
+      )}
+
       <div className="ctb-wizard-nav">
         <span />
         <button
           className="ctb-btn ctb-btn-primario"
           disabled={!podeConcluir}
-          onClick={() => onConcluir({ enquadramento, atividade, uf, temFuncionarios, regulamentada })}
+          onClick={() => onConcluir({ enquadramento, atividade, uf, temFuncionarios, regulamentada, declaracoesEmDia: jaAberta ? declaracoesEmDia : "" })}
         >
           Ver serviços recomendados
         </button>

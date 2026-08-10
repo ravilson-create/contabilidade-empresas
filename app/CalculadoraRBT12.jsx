@@ -228,7 +228,9 @@ function ModoAtrasada({ onVoltar, onEstimarMesmoAssim }) {
           Se a empresa não vem entregando o PGDAS-D há vários meses, o problema não é calcular o
           RBT12 — é que essas declarações em atraso precisam ser regularizadas primeiro. Sem
           isso, o valor de RBT12 mostrado no sistema pode estar zerado ou desatualizado, e a
-          apuração atual não é confiável.
+          apuração atual não é confiável. Para um roteiro completo (inclusive se a empresa já
+          pode ter sido excluída do Simples), veja o serviço{" "}
+          <strong>"Estou com pendências — o que fazer"</strong> na Central de Serviços.
         </p>
         <p>
           <strong>Riscos de deixar acumular:</strong> multa por atraso na entrega de cada
