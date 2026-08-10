@@ -1,9 +1,10 @@
 "use client";
+import WizardShell from "./WizardShell";
 import { LINKS_OFICIAIS } from "@/lib/linksOficiais";
 
-export default function AbaLinks() {
+export default function LinksView({ onSair }) {
   return (
-    <div>
+    <WizardShell titulo="Diretório de sites oficiais" icone="🔗" totalPassos={1} passoAtual={0} onSair={onSair}>
       <div className="ctb-aviso">
         🔗 Todos os endereços abaixo são domínios oficiais (gov.br ou equivalente). Desconfie de
         sites parecidos que cobram por serviços gratuitos, como a formalização do MEI.
@@ -12,13 +13,7 @@ export default function AbaLinks() {
         <div key={grupo.categoria}>
           <div className="ctb-categoria-titulo">{grupo.categoria}</div>
           {grupo.itens.map((item) => (
-            <a
-              key={item.nome}
-              className="ctb-link-item"
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a key={item.nome} className="ctb-link-item" href={item.url} target="_blank" rel="noopener noreferrer">
               <div className="nome">{item.nome}</div>
               <div className="url">{item.url}</div>
               <div className="paraque">{item.paraQue}</div>
@@ -26,6 +21,6 @@ export default function AbaLinks() {
           ))}
         </div>
       ))}
-    </div>
+    </WizardShell>
   );
 }

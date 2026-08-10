@@ -1,16 +1,16 @@
 "use client";
 import { useState } from "react";
+import WizardShell from "./WizardShell";
 import { OBRIGACOES } from "@/lib/obrigacoes";
 
 const FILTROS = ["Todos", "MEI", "ME", "EPP"];
 
-export default function AbaCalendario() {
+export default function CalendarioView({ onSair }) {
   const [filtro, setFiltro] = useState("Todos");
-  const lista =
-    filtro === "Todos" ? OBRIGACOES : OBRIGACOES.filter((o) => o.regime.includes(filtro));
+  const lista = filtro === "Todos" ? OBRIGACOES : OBRIGACOES.filter((o) => o.regime.includes(filtro));
 
   return (
-    <div>
+    <WizardShell titulo="Calendário completo de obrigações" icone="📅" totalPassos={1} passoAtual={0} onSair={onSair}>
       <div className="ctb-form-linha">
         {FILTROS.map((f) => (
           <button
@@ -49,6 +49,6 @@ export default function AbaCalendario() {
           <span className="ctb-base">{o.base}</span>
         </div>
       ))}
-    </div>
+    </WizardShell>
   );
 }
