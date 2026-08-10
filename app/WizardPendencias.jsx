@@ -96,7 +96,7 @@ export default function WizardPendencias({ onSair, perfil }) {
         </a>
         {situacao !== "ainda_optante" && (
           <div style={{ marginTop: 8 }}>
-            <a className="ctb-btn-link" href="https://www.gov.br/receitafederal/pt-br/assuntos/e-cac" target="_blank" rel="noopener noreferrer">
+            <a className="ctb-btn-link" href="https://cav.receita.fazenda.gov.br/" target="_blank" rel="noopener noreferrer">
               Abrir o e-CAC →
             </a>
           </div>
