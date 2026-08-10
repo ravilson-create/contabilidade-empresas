@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import {
   TIPOS_ATIVIDADE_MEI,
   SALARIO_MINIMO_2026,
@@ -121,17 +122,11 @@ export default function WizardDasMei({ onSair, perfil }) {
         </div>
       </div>
 
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde pagar</div>
-        <p>
-          Emita a guia (PGMEI) com este valor no Portal do Empreendedor e pague até o dia 20 deste
-          mês (ou o dia útil anterior, se cair em fim de semana/feriado). É possível gerar o DAS de
-          vários meses de uma vez e ativar o débito automático.
-        </p>
-        <a className="ctb-btn-link" href="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor" target="_blank" rel="noopener noreferrer">
-          Abrir o Portal do Empreendedor →
-        </a>
-      </div>
+      <GuiaPortal
+        titulo="Onde pagar"
+        texto={`Emita a guia com o valor de ${fmtBRL(das.total)} e pague até o dia 20 deste mês (ou o dia útil anterior, se cair em fim de semana/feriado).`}
+        chave="pgmei"
+      />
 
       <div className="ctb-aviso" style={{ marginTop: 14 }}>
         ℹ️ Valores de 2026 (salário mínimo {fmtBRL(SALARIO_MINIMO_2026)}). Guarde este DAS pago

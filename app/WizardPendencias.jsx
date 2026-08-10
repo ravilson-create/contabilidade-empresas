@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import { checklistPendencias } from "@/lib/guiaPendencias";
 
 const LABEL_SITUACAO = {
@@ -82,26 +83,41 @@ export default function WizardPendencias({ onSair, perfil }) {
         </div>
       ))}
 
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde consultar e regularizar</div>
-        <p>
-          {situacao === "nao_sei"
-            ? "Comece pela Consulta Optantes (gratuita, sem login) no Portal do Simples Nacional — e anote o 'Detalhamento' de quem excluiu, se for o caso."
-            : situacao === "excluida"
-              ? "Se a Consulta Optantes apontou a Receita Federal como responsável, confira o Termo de Exclusão no e-CAC. Se apontou um Estado ou Município, o e-CAC não vai mostrar nada — contate a Sefaz do estado ou a Secretaria de Fazenda da prefeitura indicada. Depois de regularizado, volte ao Portal do Simples Nacional para solicitar nova opção na janela do ano."
-              : "Regularize as declarações e pagamentos diretamente no Portal do Simples Nacional."}
-        </p>
-        <a className="ctb-btn-link" href="https://www8.receita.fazenda.gov.br/SimplesNacional/" target="_blank" rel="noopener noreferrer">
-          Abrir o Portal do Simples Nacional →
-        </a>
-        {situacao !== "ainda_optante" && (
-          <div style={{ marginTop: 8 }}>
-            <a className="ctb-btn-link" href="https://cav.receita.fazenda.gov.br/" target="_blank" rel="noopener noreferrer">
-              Abrir o e-CAC (se a exclusão foi federal) →
-            </a>
+      {situacao === "nao_sei" && (
+        <GuiaPortal
+          titulo="Onde consultar agora"
+          texto="Comece pela Consulta Optantes — pública, gratuita, sem login. Anote o 'Detalhamento' de quem excluiu, se for o caso."
+          chave="consultaOptantes"
+        />
+      )}
+
+      {situacao === "ainda_optante" && (
+        <GuiaPortal
+          titulo="Onde regularizar"
+          texto={`Entregue as declarações atrasadas no ${enquadramento === "mei" ? "PGMEI/DASN-SIMEI" : "PGDAS-D"}, mês a mês, do mais antigo para o mais recente.`}
+          chave={enquadramento === "mei" ? "dasnSimei" : "pgdasD"}
+        />
+      )}
+
+      {situacao === "excluida" && (
+        <>
+          <GuiaPortal titulo="Se a Consulta Optantes apontou a Receita Federal" chave="eCacCaixaPostal" />
+          <div className="ctb-card" style={{ marginTop: 12 }}>
+            <h3>Se a Consulta Optantes apontou um Estado ou Município</h3>
+            <p>
+              Não existe portal nacional único para isso — contate diretamente a Sefaz do estado
+              ou a Secretaria de Fazenda da prefeitura indicada no 'Detalhamento', por telefone ou
+              atendimento presencial se não houver sistema online. Peça o motivo exato e o valor
+              em aberto.
+            </p>
           </div>
-        )}
-      </div>
+          <GuiaPortal
+            titulo="Depois de regularizado: pedir nova opção"
+            texto="Todas as pendências apontadas precisam estar quitadas antes de solicitar."
+            chave="opcaoSimplesNacional"
+          />
+        </>
+      )}
 
       <div className="ctb-aviso" style={{ marginTop: 14 }}>
         ⚖️ Dado o valor em jogo (multas, juros e o risco de mudar de regime tributário sem

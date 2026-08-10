@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import { LIMITE_MEI_ANUAL, LIMITE_MEI_CAMINHONEIRO_ANUAL, avaliarLimiteMEI } from "@/lib/mei";
 import { fmtBRL } from "@/lib/simplesNacional";
 
@@ -107,17 +108,11 @@ export default function WizardDasnSimei({ onSair }) {
         </div>
       </div>
 
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde declarar</div>
-        <p>
-          Use estes números na DASN-SIMEI, no Portal do Simples Nacional. O prazo é até 31 de maio
-          — mesmo sem movimento, a declaração é obrigatória (marque "sem movimento" se for o
-          caso). Antes de declarar, confira se todos os DAS mensais do ano estão pagos.
-        </p>
-        <a className="ctb-btn-link" href="https://www8.receita.fazenda.gov.br/SimplesNacional/" target="_blank" rel="noopener noreferrer">
-          Abrir o Portal do Simples Nacional →
-        </a>
-      </div>
+      <GuiaPortal
+        titulo="Onde declarar"
+        texto={`Use estes números na DASN-SIMEI. Prazo: até 31 de maio — mesmo sem movimento, marque "sem movimento". Antes, confira se todos os DAS de ${ano} estão pagos.`}
+        chave="dasnSimei"
+      />
     </div>,
   ];
 

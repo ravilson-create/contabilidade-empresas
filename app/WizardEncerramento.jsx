@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import { PASSOS_ENCERRAMENTO_MEI, PASSOS_ENCERRAMENTO_MEEPP } from "@/lib/guiaEncerramento";
 
 export default function WizardEncerramento({ onSair, perfil }) {
@@ -43,26 +44,15 @@ export default function WizardEncerramento({ onSair, perfil }) {
           </div>
         )
       )}
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde solicitar a baixa</div>
-        <p>
-          {enquadramento === "mei"
-            ? "A baixa do MEI é feita diretamente no Portal do Empreendedor, na opção 'Quero encerrar o CNPJ'."
-            : "Comece pelo registro do distrato social na Junta Comercial do seu estado — a baixa do CNPJ segue automaticamente pela integração Redesim."}
-        </p>
-        <a
-          className="ctb-btn-link"
-          href={
-            enquadramento === "mei"
-              ? "https://www.gov.br/empresas-e-negocios/pt-br/empreendedor"
-              : "https://www.gov.br/empresas-e-negocios/pt-br/redesim"
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {enquadramento === "mei" ? "Abrir o Portal do Empreendedor →" : "Abrir o Portal Redesim →"}
-        </a>
-      </div>
+      <GuiaPortal
+        titulo="Onde solicitar a baixa"
+        texto={
+          enquadramento === "mei"
+            ? "A baixa do MEI é feita diretamente no Portal do Empreendedor."
+            : "Comece pelo registro do distrato social na Junta Comercial — a baixa do CNPJ segue automaticamente pela integração Redesim."
+        }
+        chave={enquadramento === "mei" ? "portalEmpreendedorBaixa" : "juntaComercial"}
+      />
     </div>,
   ];
 

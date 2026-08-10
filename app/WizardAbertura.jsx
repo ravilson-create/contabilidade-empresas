@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import { passosPersonalizados } from "@/lib/guiaAbertura";
 
 export default function WizardAbertura({ onSair, perfil }) {
@@ -96,26 +97,15 @@ export default function WizardAbertura({ onSair, perfil }) {
           <span className="ctb-base">{p.base}</span>
         </div>
       ))}
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Por onde começar agora</div>
-        <p>
-          {enquadramento === "mei"
-            ? "Vá direto ao Portal do Empreendedor — a formalização do MEI é gratuita e o CNPJ sai na hora."
-            : "Comece pela consulta de viabilidade do nome no portal Redesim antes de ir à Junta Comercial."}
-        </p>
-        <a
-          className="ctb-btn-link"
-          href={
-            enquadramento === "mei"
-              ? "https://www.gov.br/empresas-e-negocios/pt-br/empreendedor"
-              : "https://www.gov.br/empresas-e-negocios/pt-br/redesim"
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {enquadramento === "mei" ? "Abrir o Portal do Empreendedor →" : "Abrir o Portal Redesim →"}
-        </a>
-      </div>
+      <GuiaPortal
+        titulo="Por onde começar agora"
+        texto={
+          enquadramento === "mei"
+            ? "A formalização do MEI é gratuita e o CNPJ sai na hora."
+            : "Comece pela consulta de viabilidade do nome antes de ir à Junta Comercial."
+        }
+        chave={enquadramento === "mei" ? "portalEmpreendedorAbertura" : "redesimAbertura"}
+      />
     </div>
   );
 

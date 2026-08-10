@@ -1,29 +1,27 @@
 "use client";
 import { useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 
 const RESULTADOS = {
   servico: {
     nota: "NFS-e — Nota Fiscal de Serviço Eletrônica",
     tributo: "ISS (municipal)",
-    onde: "Portal Nacional da NFS-e",
-    url: "https://www.gov.br/nfse/pt-br",
+    chave: "nfseNacional",
     texto:
       "Toda prestação de serviço exige NFS-e, mesmo para o MEI. Desde 1º/01/2026 a emissão é obrigatoriamente feita pelo Emissor Nacional da NFS-e (portal único do governo federal), que substituiu os sistemas próprios de cada prefeitura.",
   },
   consumidor_final: {
     nota: "NFC-e — Nota Fiscal de Consumidor Eletrônica (ou cupom fiscal)",
     tributo: "ICMS (estadual)",
-    onde: "Portal Nacional da NF-e/NFC-e + emissor gratuito da Sefaz do seu estado",
-    url: "https://www.nfe.fazenda.gov.br/portal/",
+    chave: "nfeNfce",
     texto:
-      "Usada em vendas presenciais de mercadoria a consumidor final (varejo, balcão) — normalmente sai impressa ou por QR Code no PDV. A emissão é feita no emissor gratuito da Sefaz do seu estado; o portal nacional reúne a documentação e os links de cada estado.",
+      "Usada em vendas presenciais de mercadoria a consumidor final (varejo, balcão) — normalmente sai impressa ou por QR Code no PDV. A emissão é feita no emissor gratuito da Sefaz do seu estado.",
   },
   b2b: {
     nota: "NF-e — Nota Fiscal Eletrônica (modelo 55)",
     tributo: "ICMS (estadual)",
-    onde: "Portal Nacional da NF-e/NFC-e + emissor gratuito da Sefaz do seu estado",
-    url: "https://www.nfe.fazenda.gov.br/portal/",
+    chave: "nfeNfce",
     texto:
       "Obrigatória para vendas a outra empresa, revenda, indústria ou operações interestaduais — precisa acompanhar o transporte da mercadoria. A emissão é feita no emissor gratuito da Sefaz do seu estado.",
   },
@@ -86,13 +84,7 @@ export default function WizardNotaFiscal({ onSair, perfil }) {
           <span className="valor">{resultado.tributo}</span>
         </div>
       </div>
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde emitir</div>
-        <p>{resultado.texto}</p>
-        <a className="ctb-btn-link" href={resultado.url} target="_blank" rel="noopener noreferrer">
-          {resultado.onde} →
-        </a>
-      </div>
+      <GuiaPortal titulo="Onde emitir" texto={resultado.texto} chave={resultado.chave} />
     </div>
   );
 

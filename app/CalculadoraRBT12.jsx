@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import GuiaPortal from "./GuiaPortal";
 import { meses12Anteriores, somarRBT12, calcularRBT12Proporcional, parseListaValores } from "@/lib/rbt12";
 import { fmtBRL } from "@/lib/simplesNacional";
 
@@ -274,13 +275,7 @@ function ModoAtrasada({ onVoltar, onEstimarMesmoAssim }) {
         </p>
       </div>
 
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde regularizar</div>
-        <p>Acesse o PGDAS-D para ver as competências em aberto e transmitir as declarações atrasadas.</p>
-        <a className="ctb-btn-link" href="https://www8.receita.fazenda.gov.br/SimplesNacional/" target="_blank" rel="noopener noreferrer">
-          Abrir o Portal do Simples Nacional →
-        </a>
-      </div>
+      <GuiaPortal titulo="Onde regularizar" texto="Veja as competências em aberto e transmita as declarações atrasadas." chave="pgdasD" />
 
       <button className="ctb-voltar" style={{ marginTop: 14 }} onClick={onEstimarMesmoAssim}>
         Mesmo assim, quero fazer uma estimativa aproximada com os meses que eu tenho →

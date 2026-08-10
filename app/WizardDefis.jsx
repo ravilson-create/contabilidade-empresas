@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import { fmtBRL } from "@/lib/simplesNacional";
 
 function parseNum(s) {
@@ -84,17 +85,11 @@ export default function WizardDefis({ onSair }) {
         </div>
       </div>
 
-      <div className="ctb-proximo-passo">
-        <div className="titulo">Onde declarar</div>
-        <p>
-          Leve estes números — conferidos com a escrituração contábil do seu contador — para a
-          DEFIS no Portal do Simples Nacional. O prazo é até 31 de março. Sem isso, a empresa fica
-          impedida de emitir a certidão negativa de débitos.
-        </p>
-        <a className="ctb-btn-link" href="https://www8.receita.fazenda.gov.br/SimplesNacional/" target="_blank" rel="noopener noreferrer">
-          Abrir o Portal do Simples Nacional →
-        </a>
-      </div>
+      <GuiaPortal
+        titulo="Onde declarar"
+        texto="Leve estes números — conferidos com a escrituração contábil do seu contador — para a DEFIS. Prazo: até 31 de março. Sem isso, a empresa fica impedida de emitir certidão negativa de débitos."
+        chave="defis"
+      />
     </div>,
   ];
 

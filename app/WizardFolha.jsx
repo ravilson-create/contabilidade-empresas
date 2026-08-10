@@ -1,8 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
-import { calcularFolhaMensal } from "@/lib/folhaPagamento";
-import { fmtBRL } from "@/lib/simplesNacional";
+import GuiaPortal from "./GuiaPortal";
+import { calcularFolhaMensal, detalharINSS } from "@/lib/folhaPagamento";
+import { fmtBRL, fmtPct } from "@/lib/simplesNacional";
 
 function parseNum(s) {
   const v = parseFloat(String(s || "").replace(/\./g, "").replace(",", "."));
@@ -20,6 +21,8 @@ export default function WizardFolha({ onSair }) {
     if (!s) return null;
     return calcularFolhaMensal({ salarioBruto: s, dependentes: parseInt(dependentes || "0", 10), outrosDescontos: parseNum(outrosDescontos) });
   }, [salario, dependentes, outrosDescontos]);
+
+  const inssDetalhado = useMemo(() => (parseNum(salario) ? detalharINSS(parseNum(salario)) : []), [salario]);
 
   const passos = [
     <div key="0">
@@ -78,6 +81,21 @@ export default function WizardFolha({ onSair }) {
             </div>
           </div>
 
+          <div className="ctb-memoria-calculo">
+            <span className="linha">Memória de cálculo do INSS (tabela progressiva 2026):</span>
+            {inssDetalhado.map((l, i) => (
+              <span className="linha" key={i}>
+                Faixa {fmtBRL(l.de)} a {fmtBRL(l.ate)}: {fmtBRL(l.base)} × {fmtPct(l.aliquota)} = {fmtBRL(l.valor)}
+              </span>
+            ))}
+            <span className="linha" style={{ marginTop: 6, display: "block" }}>
+              INSS total = <span className="resultado">{fmtBRL(folha.inss)}</span>
+            </span>
+            <span className="linha" style={{ marginTop: 6, display: "block" }}>
+              Base do IRRF = salário − INSS − (dependentes × R$189,59) = {fmtBRL(folha.baseCalculo)}
+            </span>
+          </div>
+
           <div className="ctb-aviso">
             ℹ️ O IRRF de 2026 usa a tabela progressiva normal, mas quem ganha até R$ 5.000/mês
             (salário − INSS) fica isento pelo redutor da nova lei, com redução parcial até
@@ -85,16 +103,11 @@ export default function WizardFolha({ onSair }) {
             estimativa e confirme o valor exato no sistema de folha oficial da empresa.
           </div>
 
-          <div className="ctb-proximo-passo">
-            <div className="titulo">Onde registrar</div>
-            <p>
-              Lance esta folha no eSocial dentro do prazo mensal (evento de folha de pagamento até
-              o dia 15 do mês seguinte) e recolha o FGTS até o dia 20.
-            </p>
-            <a className="ctb-btn-link" href="https://www.esocial.gov.br" target="_blank" rel="noopener noreferrer">
-              Abrir o eSocial →
-            </a>
-          </div>
+          <GuiaPortal
+            titulo="Onde registrar"
+            texto="Lance esta folha dentro do prazo mensal (evento de folha de pagamento até o dia 15 do mês seguinte) e recolha o FGTS até o dia 20."
+            chave="esocialFolha"
+          />
         </>
       )}
     </div>,

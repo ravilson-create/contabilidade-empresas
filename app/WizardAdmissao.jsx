@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
+import GuiaPortal from "./GuiaPortal";
 import { calcularEncargosAdmissao } from "@/lib/folhaPagamento";
 import { fmtBRL, anexoSugeridoPorAtividade } from "@/lib/simplesNacional";
 
@@ -105,18 +106,11 @@ export default function WizardAdmissao({ onSair, perfil }) {
             </ul>
           </div>
 
-          <div className="ctb-proximo-passo">
-            <div className="titulo">Onde registrar a admissão</div>
-            <p>
-              Registre a admissão no eSocial <strong>antes do início do trabalho</strong> (o
-              prazo legal é até 1 dia útil antes, e nunca depois do começo das atividades). O
-              sistema gera automaticamente as guias de FGTS (dia 20) e a folha de pagamento
-              mensal.
-            </p>
-            <a className="ctb-btn-link" href="https://www.esocial.gov.br" target="_blank" rel="noopener noreferrer">
-              Abrir o eSocial →
-            </a>
-          </div>
+          <GuiaPortal
+            titulo="Onde registrar a admissão"
+            texto="Registre antes do início do trabalho (prazo legal: até 1 dia útil antes, nunca depois). O sistema gera automaticamente as guias de FGTS (dia 20) e a folha mensal."
+            chave="esocialAdmissao"
+          />
         </>
       )}
     </div>,

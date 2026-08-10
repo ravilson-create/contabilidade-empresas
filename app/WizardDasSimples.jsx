@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
 import CalculadoraRBT12 from "./CalculadoraRBT12";
+import GuiaPortal from "./GuiaPortal";
 import { ANEXOS, calcularDAS, fmtBRL, fmtPct, FATOR_R_MINIMO, anexoSugeridoPorAtividade } from "@/lib/simplesNacional";
 
 function parseNum(s) {
@@ -126,17 +127,30 @@ export default function WizardDasSimples({ onSair, perfil }) {
             )}
           </div>
 
-          <div className="ctb-proximo-passo">
-            <div className="titulo">Onde declarar e pagar</div>
-            <p>
-              Lance a receita do mês no PGDAS-D (Portal do Simples Nacional). O sistema confere
-              este cálculo automaticamente e gera o DAS oficial para pagamento até o dia 20 do mês
-              seguinte (ou o dia útil anterior, se cair em fim de semana/feriado).
-            </p>
-            <a className="ctb-btn-link" href="https://www8.receita.fazenda.gov.br/SimplesNacional/" target="_blank" rel="noopener noreferrer">
-              Abrir o Portal do Simples Nacional →
-            </a>
+          <div className="ctb-memoria-calculo">
+            <span className="linha">Memória de cálculo (LC 123/2006, art. 18, §1º-A):</span>
+            <span className="linha">
+              Alíquota efetiva = ((RBT12 × alíquota nominal) − parcela a deduzir) ÷ RBT12
+            </span>
+            <span className="linha">
+              = (({fmtBRL(parseNum(rbt12))} × {fmtPct(resultado.aliquotaNominal)}) − {fmtBRL(resultado.faixa.deduzir)}) ÷ {fmtBRL(parseNum(rbt12))}
+            </span>
+            <span className="linha">
+              = <span className="resultado">{fmtPct(resultado.aliquotaEfetiva, 4)}</span>
+            </span>
+            <span className="linha" style={{ marginTop: 6, display: "block" }}>
+              DAS do mês = alíquota efetiva × receita do mês = {fmtPct(resultado.aliquotaEfetiva, 4)} × {fmtBRL(parseNum(receitaMes))}
+            </span>
+            <span className="linha">
+              = <span className="resultado">{fmtBRL(resultado.valorDAS)}</span>
+            </span>
           </div>
+
+          <GuiaPortal
+            titulo="Onde declarar e pagar"
+            texto="Lance a receita do mês no PGDAS-D. O sistema confere este cálculo automaticamente e gera o DAS oficial."
+            chave="pgdasD"
+          />
         </>
       )}
     </div>,
