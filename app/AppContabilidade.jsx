@@ -9,6 +9,7 @@ import WizardDasSimples from "./WizardDasSimples";
 import WizardDasnSimei from "./WizardDasnSimei";
 import WizardDefis from "./WizardDefis";
 import WizardAdmissao from "./WizardAdmissao";
+import WizardRescisao from "./WizardRescisao";
 import WizardFolha from "./WizardFolha";
 import WizardNotaFiscal from "./WizardNotaFiscal";
 import WizardEncerramento from "./WizardEncerramento";
@@ -23,6 +24,7 @@ const COMPONENTES_SERVICO = {
   "dasn-simei": WizardDasnSimei,
   defis: WizardDefis,
   admissao: WizardAdmissao,
+  rescisao: WizardRescisao,
   folha: WizardFolha,
   "nota-fiscal": WizardNotaFiscal,
   encerramento: WizardEncerramento,
