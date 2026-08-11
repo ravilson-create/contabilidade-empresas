@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import WizardShell, { WizardNav } from "./WizardShell";
 import GuiaPortal from "./GuiaPortal";
 import { calcularEncargosAdmissao, TIPOS_VINCULO } from "@/lib/folhaPagamento";
+import { TIPOS_JORNADA, CBO_SUGESTOES } from "@/lib/jornada";
 import { fmtBRL, anexoSugeridoPorAtividade } from "@/lib/simplesNacional";
 
 function parseNum(s) {
@@ -52,9 +53,17 @@ export default function WizardAdmissao({ onSair, perfil }) {
   const [tipo, setTipo] = useState("");
   const [salario, setSalario] = useState("");
   const [anexoSimples, setAnexoSimples] = useState(perfil?.enquadramento === "meepp" ? anexoSugeridoPorAtividade(perfil.atividade) || "nao_simples" : "nao_simples");
+  const [cbo, setCbo] = useState("");
+  const [tipoJornada, setTipoJornada] = useState("padrao");
+  const [horarioEntrada, setHorarioEntrada] = useState("08:00");
+  const [horarioSaida, setHorarioSaida] = useState("18:00");
+  const [intervaloMin, setIntervaloMin] = useState("60");
+  const [dias, setDias] = useState("Segunda a sexta");
+  const [dsr, setDsr] = useState("Domingo");
 
   const ehMei = perfil?.enquadramento === "mei";
   const precisaAnexo = (tipo === "clt" || tipo === "aprendiz") && !ehMei;
+  const temJornada = tipo === "clt" || tipo === "aprendiz" || tipo === "domestico";
 
   const encargos = useMemo(() => {
     const s = parseNum(salario);
@@ -140,6 +149,75 @@ export default function WizardAdmissao({ onSair, perfil }) {
     </div>
   );
 
+  const passoJornada = (
+    <div key="jornada">
+      <p style={{ fontSize: 13, color: "#3A423F", marginBottom: 14 }}>
+        Esses dados alimentam o CBO e a Tabela de Horários/Turnos de Trabalho (S-1050) do eSocial
+        — ela é cadastrada antes da admissão, e o evento de admissão só referencia o código dela.
+      </p>
+
+      <div className="ctb-form-linha">
+        <div className="ctb-campo">
+          <label>CBO — Classificação Brasileira de Ocupações</label>
+          <input list="cbo-sugestoes" value={cbo} onChange={(e) => setCbo(e.target.value)} placeholder="Ex: 7156-10" autoFocus />
+          <datalist id="cbo-sugestoes">
+            {CBO_SUGESTOES.map((c) => (
+              <option key={c.codigo} value={`${c.codigo} — ${c.titulo}`} />
+            ))}
+          </datalist>
+        </div>
+      </div>
+      <div className="ctb-aviso" style={{ marginTop: -4 }}>
+        ℹ️ As sugestões acima são exemplos ligados a instalação/manutenção e energia solar — não
+        são um cadastro oficial. Confirme sempre o código exato na busca do próprio eSocial ou em
+        cbo.mte.gov.br antes de preencher: um CBO errado distorce o PPP e o FAP/RAT da empresa.
+      </div>
+
+      <div className="ctb-form-linha" style={{ marginTop: 14 }}>
+        <div className="ctb-campo">
+          <label>Tipo de jornada</label>
+          <select value={tipoJornada} onChange={(e) => setTipoJornada(e.target.value)}>
+            {Object.entries(TIPOS_JORNADA).map(([k, v]) => (
+              <option key={k} value={k}>
+                {v.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: "#5F6B67", margin: "0 0 12px" }}>{TIPOS_JORNADA[tipoJornada].desc}</p>
+
+      <div className="ctb-form-linha">
+        <div className="ctb-campo">
+          <label>Dias de trabalho</label>
+          <input value={dias} onChange={(e) => setDias(e.target.value)} placeholder="Ex: Segunda a sexta" />
+        </div>
+        <div className="ctb-campo">
+          <label>Descanso Semanal Remunerado (DSR)</label>
+          <input value={dsr} onChange={(e) => setDsr(e.target.value)} placeholder="Ex: Domingo" />
+        </div>
+      </div>
+      <div className="ctb-form-linha">
+        <div className="ctb-campo">
+          <label>Horário de entrada</label>
+          <input type="time" value={horarioEntrada} onChange={(e) => setHorarioEntrada(e.target.value)} />
+        </div>
+        <div className="ctb-campo">
+          <label>Horário de saída</label>
+          <input type="time" value={horarioSaida} onChange={(e) => setHorarioSaida(e.target.value)} />
+        </div>
+        <div className="ctb-campo">
+          <label>Intervalo intrajornada (minutos)</label>
+          <input inputMode="numeric" value={intervaloMin} onChange={(e) => setIntervaloMin(e.target.value)} placeholder="60" />
+        </div>
+      </div>
+      <div className="ctb-aviso">
+        ℹ️ Intervalo mínimo obrigatório: 1h (60 min) para jornada acima de 6h/dia, ou 15 min para
+        jornada entre 4h e 6h (CLT, art. 71).
+      </div>
+    </div>
+  );
+
   const passoResultado = (
     <div key="resultado">
       {encargos && (
@@ -194,6 +272,34 @@ export default function WizardAdmissao({ onSair, perfil }) {
             </div>
           </div>
 
+          {temJornada && (
+            <div className="ctb-documento" style={{ marginTop: 12 }}>
+              <div className="ctb-documento-titulo">Resumo para o CBO e a Tabela de Horário (S-1050)</div>
+              <div className="ctb-documento-linha">
+                <span className="label">CBO</span>
+                <span className="valor">{cbo || "—"}</span>
+              </div>
+              <div className="ctb-documento-linha">
+                <span className="label">Tipo de jornada</span>
+                <span className="valor">{TIPOS_JORNADA[tipoJornada].label}</span>
+              </div>
+              <div className="ctb-documento-linha">
+                <span className="label">Dias de trabalho</span>
+                <span className="valor">{dias}</span>
+              </div>
+              <div className="ctb-documento-linha">
+                <span className="label">Horário</span>
+                <span className="valor">
+                  {horarioEntrada} às {horarioSaida} (intervalo de {intervaloMin} min)
+                </span>
+              </div>
+              <div className="ctb-documento-linha">
+                <span className="label">Descanso Semanal Remunerado</span>
+                <span className="valor">{dsr}</span>
+              </div>
+            </div>
+          )}
+
           <div className="ctb-card" style={{ marginTop: 12 }}>
             <h3>Documentos a pedir</h3>
             <ul className="ctb-checklist">
@@ -219,7 +325,11 @@ export default function WizardAdmissao({ onSair, perfil }) {
           ) : (
             <GuiaPortal
               titulo="Onde registrar a admissão"
-              texto="Registre antes do início do trabalho (prazo legal: até 1 dia útil antes, nunca depois)."
+              texto={
+                temJornada
+                  ? "Cadastre primeiro a Tabela de Horários (S-1050) com os dados de jornada acima, depois registre a admissão referenciando ela e o CBO informado — antes do início do trabalho (prazo legal: até 1 dia útil antes)."
+                  : "Registre antes do início do trabalho (prazo legal: até 1 dia útil antes, nunca depois)."
+              }
               chave={tipo === "domestico" ? "esocialDomestico" : "esocialAdmissao"}
             />
           )}
@@ -228,7 +338,7 @@ export default function WizardAdmissao({ onSair, perfil }) {
     </div>
   );
 
-  const passos = [passoTipo, passoDados, passoResultado];
+  const passos = temJornada ? [passoTipo, passoDados, passoJornada, passoResultado] : [passoTipo, passoDados, passoResultado];
   const ultimoIndice = passos.length - 1;
   const podeAvancar = passo === 0 ? !!tipo : passo === 1 ? parseNum(salario) > 0 : true;
 
