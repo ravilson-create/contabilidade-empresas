@@ -272,6 +272,14 @@ export default function WizardRescisao({ onSair }) {
             texto="Envie o evento de desligamento dentro do mesmo prazo de pagamento das verbas."
             chave="esocialDesligamento"
           />
+
+          {resultado.temSaqueFgts && (
+            <GuiaPortal
+              titulo="Onde o trabalhador saca o FGTS"
+              texto="Passe este passo a passo para o funcionário — é ele quem solicita, com o CPF e senha dele, depois que a empresa enviar o desligamento no eSocial."
+              chave="fgtsSaqueRescisao"
+            />
+          )}
         </>
       )}
     </div>
