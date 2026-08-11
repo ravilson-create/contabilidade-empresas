@@ -12,6 +12,9 @@ import WizardAdmissao from "./WizardAdmissao";
 import WizardRescisao from "./WizardRescisao";
 import WizardFolha from "./WizardFolha";
 import WizardNotaFiscal from "./WizardNotaFiscal";
+import WizardRetencoes from "./WizardRetencoes";
+import WizardProLabore from "./WizardProLabore";
+import WizardLucroPresumido from "./WizardLucroPresumido";
 import WizardEncerramento from "./WizardEncerramento";
 import CalendarioView from "./CalendarioView";
 import LinksView from "./LinksView";
@@ -27,6 +30,9 @@ const COMPONENTES_SERVICO = {
   rescisao: WizardRescisao,
   folha: WizardFolha,
   "nota-fiscal": WizardNotaFiscal,
+  retencoes: WizardRetencoes,
+  prolabore: WizardProLabore,
+  "lucro-presumido": WizardLucroPresumido,
   encerramento: WizardEncerramento,
   calendario: CalendarioView,
   links: LinksView,
